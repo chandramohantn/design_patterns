@@ -1,0 +1,12 @@
+# Context Object Design Pattern
+Used when we want to pass the same set of parameters or a subset of parameters to multiple methods. The parameters in this case mostly encapsulates the contextual information, think of it like as a "context bag" or "execution context" that travels with a request or operation, carrying relevant information like user authentication, request metadata, configuration or transaction data.
+
+The encapsulation allows us to reduces the number of parameters passed to methods. This way only the context class needs to be passed to the methods. But now the methods will have access to the full context that is access to the entire set of attributes even though all the attributes might not be required for every method. This is generally acceptable because the context is meant to be a representation of the current execution environment for the operation.
+
+In terms of security, if the context contains sensitive information (like passwords, tokens, etc), then having it passed to the methods that dont need it might increase the risk of exposure. In this case it is possible to design the context object to hide sensitive data or use different context objects for different layers. For example, you can have a SecurityContext that holds authentication data and a RequestContext that holds request related data. Alternatively, you can use the principle of least privilege by designing the context object to have separate methods for getting sensitive data (might require additional checks) or by using immutable context objects and being careful about what is included.
+
+With this design pattern it is possible to easily extend and maintain the code base without changing the method signatures. The only change that is required is updating the context object with new attributes and the methods that actually need this new attribute.
+
+In this case, the testing process also becomes much easier. Now it is possible to use the same context object with the required state and use it across multiple tests. This reduces the setup code and makes tests more readable.
+
+The context object is often made immutable (dataclass frozen=True) to prevent accidental modification of the context during the operation which could make debugging hard.
